@@ -25,3 +25,8 @@ This is a boilerplate for an express app with local user authentication. It exis
 |GET| `*` | Catch-all for 404's|
 
 ## Directions for Use
+
+### 1. Clone the repository, but with a different name
+``` sh
+git clone <repo_link> <new_name>
+```
