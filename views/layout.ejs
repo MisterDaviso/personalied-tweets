@@ -3,12 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Author Boilerplate</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Auth Boilerplate</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <%- include('partials/nav') %>
-    <%- body %>
-    <%- include('partials/footer') %>
+    <%- include('partials/nav')%>
+    <%- include('partials/alerts')%>
+    <div>
+        <%- body %>
+    </div>
+    <%- include('partials/footer')%>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.sidenav');
+            var instances = M.Sidenav.init(elems, {});
+
+            var startDate = new Date()
+            startDate.setFullYear(startDate.getFullYear() - 30)
+
+            var elems2 = document.querySelectorAll('.datepicker')
+            var instances2 = M.Datepicker.init(elems2, {
+                autoClose: true,
+                defaultDate: startDate,
+                minYear: startDate.getFullYear() - 125,
+                yearRange: 20,
+                maxDate: (new Date())
+            })
+        });
+    </script>
 </body>
 </html>

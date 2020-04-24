@@ -1,0 +1,14 @@
+<h2> WELCOME TO YOUR PERSONAL HOME PAGE, </h2>
+<h1> <%= user.firstname %> </h1>
+
+<div class="row">
+    <div class="col s4">
+        <img src="<%=user.pic%>" alt="profile pic">
+    </div>
+    
+    <div>
+        <p><strong>Birthday: </strong> <%=moment(user.birthday).format('dddd MMMM Do[,] YYYY')%> </p>
+        <p><strong>Account Created On:</strong> <%=moment(user.createdAt).format('dddd MMMM Do[,] YYYY')%> </p>
+        <div><p><%=user.bio%></p></div>
+    </div>
+</div>

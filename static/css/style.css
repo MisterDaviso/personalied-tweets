@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: bisque;
+    text-align: center;
 }
 h1 {
     color: skyblue;
@@ -26,4 +27,7 @@ nav a {
 }
 nav a:hover {
     color: forestgreen;
+}
+#logo {
+    transform: translateX(-50%);
 }

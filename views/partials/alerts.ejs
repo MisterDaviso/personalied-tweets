@@ -1,0 +1,19 @@
+<% if (alerts && alerts.error) { %>
+    <div class="card red" style="margin-top: 0">
+        <div class="card-content">
+            <% alerts.error.forEach(e => { %>
+                <p> Error: <%=e%> </p>
+            <% }) %>
+        </div>
+    </div>
+<% } %>
+
+<% if (alerts && alerts.success) { %>
+    <div class="card blue light" style="margin-top: 0">
+        <div class="card-content">
+            <% alerts.success.forEach(s => { %>
+                <%=s%>
+            <% }) %>
+        </div>
+    </div>
+<% } %>
