@@ -30,3 +30,28 @@ This is a boilerplate for an express app with local user authentication. It exis
 ``` sh
 git clone <repo_link> <new_name>
 ```
+**For Example**
+```sh
+git clone https://github.com/MisterDaviso/auth-boiler.git new-project-name
+```
+
+### 2. Install module dependencies
+```sh
+npm i 
+```
+
+### 3. Customize to your personal style!
+Remove all the basic defaulty stuff I had. Please, I insist.
+* Title in `layout.ejs`
+* Logo field in the nav bar
+* Switch Favicon to project-specific icon
+
+### 4. Create a new database for the project
+```sh
+createdb <new_db_name>
+```
+
+### 5. Update your config.json
+In `config/congi.json`, change the "database" value to the name you set in step 4. Other settings should be fine by default, so alter them at your own risk.
+
+### 6. Migrate
