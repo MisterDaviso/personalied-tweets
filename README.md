@@ -18,5 +18,10 @@ This is a boilerplate for an express app with local user authentication. It exis
 |firstname|String|Required length > 1|
 
 ## Routes
+**Routes in index.js (main)**
+|Method|Path|Purpose|
+|-----|---------|----------------|
+|GET| `/` | Home Page|
+|GET| `*` | Catch-all for 404's|
 
 ## Directions for Use
