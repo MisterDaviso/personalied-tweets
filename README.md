@@ -9,3 +9,14 @@ This is a boilerplate for an express app with local user authentication. It exis
 * Hashed Passwords
 * EJS templating and EJS layouts
 * Sequelize User Model
+* Materialize styling
+
+## Included Models
+| Column | Type | Notes |
+|--------|------|---------------|
+|id|Integer|Serial Primary Key|
+|firstname|String|Required length > 1|
+
+## Routes
+
+## Directions for Use
