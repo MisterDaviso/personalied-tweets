@@ -55,7 +55,7 @@ app.get('*', (req,res) => {
 /**********************
  * SSSSSHHHHH... LISTEN
  **********************/
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log("ALRIGHT HERE WE GO")
 })
 

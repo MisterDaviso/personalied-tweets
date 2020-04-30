@@ -7,8 +7,10 @@
  */
 
 // WHAT IS REQUIRED OF THIS CONTROLLER?
+require('dotenv')
 let router = require('express').Router()
 let db = require('../models')
+var request = require('request')
 // These are needed for database manipulation
 const config = require('../config/config').development;
 const Sequelize = require('sequelize')
@@ -20,9 +22,34 @@ router.use(userLogin)
 /**
  * ROUTES
  */
-// POST a new hashtag to the user's partition with a few tweets assigned to it
-router.post('/new/:hash', (req,res) => {
-
+// POST tweets of provided hashtag to the user's table
+router.post('/new', (req,res) => {
+    // req.body contains userID and hashtag
+    request({
+        url: 'https://api.twitter.com/oauth2/token',
+        method: 'POST',
+        auth: {user:process.env.API_KEY, pass:process.env.API_SECRET},
+        form: {'grant_type':'client_credentials'}
+    }, (err, res) => {
+        if(err) {console.log(err); return;}
+        var token = JSON.parse(res.body).access_token
+        request({
+            url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${req.body.hashtag}&count=50`, 
+            headers: {'Authorization': 'Bearer ' + token}
+        }, (err, response, body) => {
+            let json = JSON.parse(body)
+            let tweets = json.statuses
+            tweets.forEach(tweet => {
+                let values = ""+
+                    `${req.body.userId},`,
+                    `${req.body.hashtag},`,
+                    'NULL,',
+                    `${tweet.id},`,
+                    `${tweet.user.screen_name},`,
+                    `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id}`;
+            })
+        })
+    })
     // Redirect back to the user's profile
     res.redirect('/profile/user')
 })
