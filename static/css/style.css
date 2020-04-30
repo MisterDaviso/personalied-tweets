@@ -2,16 +2,14 @@ html,
 body {
     margin: 0;
     padding: 0;
-    background-color: bisque;
+    background-color: darkgray;
     text-align: center;
 }
 h1 {
-    color: skyblue;
+    color: aliceblue;
 }
 nav,
 footer {
-    background-color: cornflowerblue;
-    color: #fff;
     padding: 15px 0;
 }
 nav ul{

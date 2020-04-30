@@ -2,6 +2,10 @@
 let router = require('express').Router()
 let db = require('../models')
 let passport = require('../config/passportConfig')
+// Sequelize
+const config = require('../config/config').development;
+const Sequelize = require('sequelize')
+const sequelize = new Sequelize(config.database, '', '', config)
 
 /**
  * ROUTES
@@ -18,35 +22,42 @@ router.post('/login', passport.authenticate('local', {
     failureFlash: "Are you sure you are who you say you are?",
     failureRedirect: '/auth/login'
 }))
-// GET the signup scree
+// GET the signup screen
 router.get('/signup', (req, res) => {
     res.render('auth/signup', {data: {}})
 })
 // POST a new user to the database
 router.post('/signup', (req,res,next) => {
     console.log('REQUEST BODY', req.body)
+    // If the passwords entered do not match
     if(req.body.password !== req.body.password_verify) {
-        // Let the user know stuff is broken
+        // Let the user know what they did wrong
         req.flash('error', 'Passwords do not match')
-        // Put them back on the page so that they can DO IT AGAIN
+        // Put them back on the singup page so that they can DO IT AGAIN
         res.render('auth/signup', { data: req.body, alerts: req.flash() })
+    // If the passwords matched, move on ahead.
     } else {
+        // Create a new User unless someone else already claimed that email
         db.user.findOrCreate({
             where: {email: req.body.email},
             defaults: req.body
         })
         .then(([user, wasCreated]) => {
+            // If a new user was created, follow the necessary procedures.
             if(wasCreated) {
-                // AUTO-LOGIN withpassword
+                // Create a partition for the user
+                sequelize.query(`CREATE TABLE user${user.id} PARTITION OF tweets FOR VALUES IN (${user.id})`)
+                // AUTO-LOGIN with their password
                 passport.authenticate('local', {
-                    successFlash: 'Successful Login! YOU HAVE RETURNED TO US!',
                     successRedirect: '/profile/user',
-                    failureFlash: "Are you sure you are who you say you are?",
                     failureRedirect: '/auth/login'
                 })(req,res,next)
             }
+            // If someone already had that email, let this person know.
             else {
+                // Say something snarky but leighthearted
                 req.flash('error', 'You already made an account, ya dingus')
+                // Take them to the login page, since they already have a profile
                 res.redirect('/auth/login')
             }
         })
@@ -66,6 +77,7 @@ router.post('/signup', (req,res,next) => {
     }
 })
 
+// Log the current user out
 router.get('/logout', (req,res) => {
     // Remove user data from the session
     req.logout()
@@ -73,5 +85,5 @@ router.get('/logout', (req,res) => {
     res.redirect('/')
 })
 
-// Export (allow me to include this in another page)
+// Export (allow me to include this in another file)
 module.exports = router

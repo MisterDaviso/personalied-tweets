@@ -39,9 +39,13 @@ app.use((req,res,next) => {
  ********/
 app.use('/auth', require('./controllers/auth'))
 app.use('/profile', require('./controllers/profile'))
+app.use('/tweets', require('./controllers/tweets'))
 
 app.get('/', (req,res) => {
     res.render('home')
+})
+app.get('/test',(req,res) => {
+    res.render('tweets/sort')
 })
 // Wild card. Leave it for last.
 app.get('*', (req,res) => {
