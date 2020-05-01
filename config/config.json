@@ -15,6 +15,7 @@
     "operatorsAliases": "false"
   },
   "production": {
+    "database": "d438f7e0ufq06k",
     "dialect": "postgres",
     "operatorsAliases": false,
     "use_env_variable": "DATABASE_URL"
