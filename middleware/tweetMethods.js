@@ -7,25 +7,26 @@ var request = require('request')
 
 // This is the object that will be exported
 let tweetMethods = {
-    addTweets: (userId,hashtag) => {
+    addTweets: async (userId,hashtag) => {
         // req.body contains userID and hashtag
-        request({
+        console.log("Starting access request")
+        await request({
             url: 'https://api.twitter.com/oauth2/token',
             method: 'POST',
             auth: {user:process.env.API_KEY, pass:process.env.API_SECRET},
             form: {'grant_type':'client_credentials'}
-        }, (err, response) => {
+        }, async (err, response) => {
             if(err) {console.log(err); return;}
             var token = JSON.parse(response.body).access_token
-            request({
-                url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${hashtag}&count=1`, 
+            console.log("Starting tweet request")
+            await request({
+                url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${hashtag}&count=5`, 
                 headers: {'Authorization': 'Bearer ' + token}
-            }, (err, response, body) => {
+            }, async (err, response, body) => {
                 // Parse and store just the tweet data
                 let tweets = JSON.parse(body).statuses
-                tweets.forEach(async (tweet) => {
-                    console.log(tweet)
-                    console.log(tweet.user)
+                console.log("Starting forEach loop")
+                await tweets.forEach(async (tweet) => {
                     // Check if any tweets are stored at that location.
                     let check = await sequelize.query(`SELECT * FROM user${userId} WHERE tweet_id = '${tweet.id}' AND hashtag = '${hashtag}'`)
                     // If none are, enter the tweet into the table.
@@ -42,6 +43,8 @@ let tweetMethods = {
                         sequelize.query(`INSERT INTO user${userId} VALUES (${values})`)
                     }
                 })
+                console.log("All the new tweets are added")
+                return "done"
             })
         })
     },
@@ -124,12 +127,13 @@ let tweetMethods = {
         console.log("The result of the query:",result[0])
         return result[0]
     },
-    hashtagHasUnsorted: async ([userId, hashtag]) => {
-        let sorted = await (sequelize.query(`SELECT * FROM user${userId}`,
-            `WHERE hashtag = ${hashtag}`,
+    hasUnsorted: async ([userId, hashtag]) => {
+        let unassociated = await sequelize.query(`SELECT * FROM user${userId} ` +
+            `WHERE hashtag = '${hashtag}' ` +
             `AND association IS NULL`
-        )[0] === [])
-        if (sorted) return false
+        )
+        console.log("Unassociated tweets:",unassociated[0])
+        if (unassociated[0].length === 0) return false
         else return true
     },
     getSortedTweets: ([userId,hashtag]) => {

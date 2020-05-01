@@ -27,30 +27,33 @@ router.get('/sort/:hashtag', async (req,res) => {
         params = [userId,hashtag];
     console.log("The parameters to send:", params)
     // If there are tweets that have yet to be sorted, store them..
-    if(await tweetMethods.hashtagHasUnsorted(params)) {
+    let hasUnsorted = await tweetMethods.hasUnsorted(params)
+    if(hasUnsorted) {
         console.log("You got some unsorted tweets. Awesome!")
         unsortedTweets = await tweetMethods.getUnsortedTweets(params)
     }
     else {
         console.log("All tweets are currently sorted")
         // If all the currently stored tweets are sorted, add more to the table
-        await router.use(addTweets)
+        let done = await addTweets(userId,hashtag)
         // Check to see if there are any new tweets
-        if(await tweetMethods.hashtagHasUnsorted(params)) {
-            // If there are new tweets, sort away!
-            unsortedTweets = await tweetMethods.getUnsorted(params)
-        } else {
-            // If the query doesn't return anything new, 
-            // let the user know they should come back later
-            req.flash('error', "You've gone through a lot of tweets. Maybe take a break.")
-            res.redirect('/profile/user')
-        }
+        hasUnsorted = await tweetMethods.hasUnsorted(params)
+        console.log("Are there any unsorted?",hasUnsorted)
+        // If there are new tweets, sort away!
+        if(hasUnsorted) {unsortedTweets = await tweetMethods.getUnsorted(params)}
     }
-    // Pull the URL's that will be used on sorting page
-    console.log("All unsorted tweets:", unsortedTweets)
-    let urls = unsortedTweets.map(tweet => {return tweet.tweet_url})
-    console.log("URL's:",urls)
-    res.render('tweets/sort', {hashtag, url:urls[0]})
+    if (unsortedTweets === undefined) {
+        // If the query doesn't return anything new, 
+        // let the user know they should come back later
+        req.flash('error', "You've gone through a lot of tweets. Maybe take a break.")
+        res.redirect('/profile/user')
+    } else {
+        // Pull the URL's that will be used on sorting page
+        console.log("All unsorted tweets:", unsortedTweets)
+        let urls = unsortedTweets.map(tweet => {return tweet.tweet_url})
+        console.log("URL's:",urls)
+        res.render('tweets/sort', {hashtag, url:urls[0]})
+    }
 })
 // POST a new hashtag to the user's table
 router.post('/new', async (req,res) => {
@@ -61,7 +64,7 @@ router.post('/new', async (req,res) => {
 })
 // PUT the association inside of the current tweet
 router.put('/associate', async (req,res) => {
-    await tweetMethods.setAssociation(req.user.id,req.body.hashtag,req.body.association)
+    await tweetMethods.setAssociation(req.user.id,req.body.hashtag,req.body.associate)
     res.redirect(`/tweets/sort/${req.body.hashtag}`)
 })
 // GET the tweets already sorted by the user by the provided hashtag

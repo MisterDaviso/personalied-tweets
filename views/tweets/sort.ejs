@@ -1,41 +1,39 @@
 <div>
-    <h1> Sort tweets by #<%=hashtag%> </h1>
+    <h3> Sort tweets by #<%=hashtag%> </h3>
 </div>
 
 <div class="row">
     <div class="col s8 offset-s2">
         <form method="POST" action="/tweets/associate?_method=PUT">
-            <p>
+            <span class="btn green lighten-2">
                 <label>
                     <input type="radio" name="associate" value="positive">
-                    <span> Positive </span>
+                    <span class="black-text"> Positive </span>
                 </label>
-            </p>
-            <p>
+            </span>
+            <span class="btn yellow lighten-2">
                 <label>
                     <input type="radio" name="associate" value="neutral" checked>
-                    <span> Neutral </span>
+                    <span class="black-text"> Neutral </span>
                 </label>
-            </p>
-            <p>
+            </span>
+            <span class="btn red lighten-2">
                 <label>
                     <input type="radio" name="associate" value="negative">
-                    <span> Negative </span>
+                    <span class="black-text"> Negative </span>
                 </label>
-            </p>
+            </span>
             <div>
                 <input type="hidden" name="hashtag" value="<%=hashtag%>">
             </div>
-            <input type="submit" class="btn" value="Submit">
+            <div><input type="submit" class="btn blue lighten-2" value="Submit" style="margin-top: 15px;"></div>
         </form>
     </div>
 </div>
 
-<p> Before tweet </p>
-<blockquote class="twitter-tweet">
+<blockquote class="twitter-tweet tw-align-center">
     <a href="<%=url%>"></a>
 </blockquote>
-<p> After tweet </p>
 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
