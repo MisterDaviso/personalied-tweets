@@ -18,12 +18,14 @@ let tweetMethods = {
             if(err) {console.log(err); return;}
             var token = JSON.parse(response.body).access_token
             request({
-                url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${hashtag}&count=10`, 
+                url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${hashtag}&count=1`, 
                 headers: {'Authorization': 'Bearer ' + token}
             }, (err, response, body) => {
                 // Parse and store just the tweet data
                 let tweets = JSON.parse(body).statuses
                 tweets.forEach(async (tweet) => {
+                    console.log(tweet)
+                    console.log(tweet.user)
                     // Check if any tweets are stored at that location.
                     let check = await sequelize.query(`SELECT * FROM user${userId} WHERE tweet_id = '${tweet.id}' AND hashtag = '${hashtag}'`)
                     // If none are, enter the tweet into the table.
@@ -33,9 +35,9 @@ let tweetMethods = {
                             `'${userId}', ` + 
                             `'${hashtag}', ` +
                             'NULL, ' +
-                            `'${tweet.id}', `+
+                            `${tweet.id_str}, `+
                             `'${tweet.user.screen_name}', ` +
-                            `'https://twitter.com/${tweet.user.screen_name}/status/${tweet.id}'`;
+                            `'https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}'`;
                         // Insert the data via sequelize query
                         sequelize.query(`INSERT INTO user${userId} VALUES (${values})`)
                     }

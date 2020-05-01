@@ -49,6 +49,7 @@ router.get('/sort/:hashtag', async (req,res) => {
     // Pull the URL's that will be used on sorting page
     console.log("All unsorted tweets:", unsortedTweets)
     let urls = unsortedTweets.map(tweet => {return tweet.tweet_url})
+    console.log("URL's:",urls)
     res.render('tweets/sort', {hashtag, url:urls[0]})
 })
 // POST a new hashtag to the user's table

@@ -4,22 +4,25 @@
 
 <div class="row">
     <div class="col s8 offset-s2">
-        <blockquote class="twitter-tweet">
-            <a href="<%=url%>"></a>
-        </blockquote>
         <form method="POST" action="/tweets/associate?_method=PUT">
-            <span>
-                <input type="radio" name="associate" value="positive">
-                <label>Positive</label>
-            </span>
-            <span>
-                <input type="radio" name="associate" value="neutral" checked>
-                <label>Neutral</label>
-            </span>
-            <span>
-                <input type="radio" name="associate" value="negative">
-                <label>Negative</label>
-            </span>
+            <p>
+                <label>
+                    <input type="radio" name="associate" value="positive">
+                    <span> Positive </span>
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input type="radio" name="associate" value="neutral" checked>
+                    <span> Neutral </span>
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input type="radio" name="associate" value="negative">
+                    <span> Negative </span>
+                </label>
+            </p>
             <div>
                 <input type="hidden" name="hashtag" value="<%=hashtag%>">
             </div>
@@ -28,4 +31,11 @@
     </div>
 </div>
 
+<p> Before tweet </p>
+<blockquote class="twitter-tweet">
+    <a href="<%=url%>"></a>
+</blockquote>
+<p> After tweet </p>
+
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
