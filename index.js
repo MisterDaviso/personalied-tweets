@@ -8,6 +8,7 @@ var flash = require('connect-flash')
 var layouts = require("express-ejs-layouts")
 var session = require('express-session')
 var passport = require('passport')
+var methodOverride = require('method-override')
 
 // Create the app
 var app = express()
@@ -17,6 +18,7 @@ var app = express()
  ****************************/
 app.set("view engine", "ejs")
 app.use(layouts)
+app.use(methodOverride('_method'))
 app.use(express.static('static'))
 app.use(express.urlencoded({extended: false}))
 app.use(session({

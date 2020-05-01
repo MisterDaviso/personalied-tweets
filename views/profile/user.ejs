@@ -1,17 +1,54 @@
-<h2> WELCOME TO YOUR PERSONAL HOME PAGE, </h2>
-<h1> <%= user.firstname %> </h1>
-
+<div class="row">
+    <h2> WELCOME TO YOUR PERSONAL HOME PAGE </h2>
+    <h1> <%= user.firstname %> </h1>
+</div>    
 <!-- TODO: 'New Hashtag' button, cards for each hashtag, 'Edit Info' button, -->
     <!-- Hashtag Cards: Hashtag(title), Statistics(show all), Sort(start sorting)-->
 
 <div class="row">
-    <div class="col s4">
-        <img src="<%=user.pic%>" alt="profile pic">
+    <div class="col s4 offset-s1">
+        <img src="<%=user.picture%>" alt="profile pic">
     </div>
     
-    <div>
+    <div class="col s4 offset-s2">
         <p><strong>Birthday: </strong> <%=moment(user.birthday).format('dddd MMMM Do[,] YYYY')%> </p>
         <p><strong>Account Created On:</strong> <%=moment(user.createdAt).format('dddd MMMM Do[,] YYYY')%> </p>
         <div><p><%=user.bio%></p></div>
+    </div>
+</div>
+
+<a class="btn waves-effect waves-light modal-trigger" href="#newHash">
+    New Hashtag
+</a>
+
+<div id="newHash" class="modal">
+    <form method="POST" action="/tweets/new">
+        <div class="modal-content">
+            <h4> New Hashtag </h4>
+            <p> Enter a new hashtag to start collecting data on </p>
+            <input type="text" name="hashtag">
+        </div>
+        <div class="modal-footer">
+            <input type="submit" class="btn waves-effect waves-light" value="Submit">
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    <div class="col s6 offset-s3">
+        <% if(hashtags != undefined) { %>
+            <% hashtags.forEach(h => { %>
+                <div class="card grey lighten-3 col s2">
+                    <div class="card-content">
+                        <span class="card-title"><%=h%></span>
+                        <form method="GET" action="/tweets/sort/<%=h%>">
+                            <button class="btn waves-effect waves-light" type="submit">
+                                Sort
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
     </div>
 </div>

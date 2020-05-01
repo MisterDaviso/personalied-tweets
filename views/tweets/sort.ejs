@@ -1,60 +1,31 @@
-<blockquote class="twitter-tweet">
-    <p lang="en" dir="ltr">
-        Sure sex is cool but have you ever exploded into thousands of crows underneath a street lamp.
-    </p>
-    &mdash; Doth (@DothTheDoth) 
-    <a href="https://twitter.com/DothTheDoth/status/1255663962210938881?ref_src=twsrc%5Etfw">April 30, 2020</a>
-</blockquote>
+<div>
+    <h1> Sort tweets by #<%=hashtag%> </h1>
+</div>
 
-<blockquote class="twitter-tweet">
-    <p lang="en" dir="ltr">
-        did it work 
-        <a href="https://t.co/ZTSSDtyc5v">pic.twitter.com/ZTSSDtyc5v</a>
-    </p>
-    &mdash; Rooster Teeth (@RoosterTeeth) 
-    <a href="https://twitter.com/RoosterTeeth/status/1255625910960545793?ref_src=twsrc%5Etfw">
-        April 29, 2020
-    </a>
-</blockquote> 
-
-<blockquote class="twitter-tweet">
-    <p lang="en" dir="ltr">
-        Okay yall. I&#39;ve got a rant. Yes, skirts can make physical activity difficult for us HOWEVER if you&#39;ve worn skirts every day of your life, you know how to do what you need to do in a skirt. The whole &quot;iF ONLY i cOuLd weAr PantS&quot; idea would never even be a passing idea for them
-    </p>
-    &mdash; 📚Lydia📚 (@LibraryLydia) 
-    <a href="https://twitter.com/LibraryLydia/status/1255560612165423104?ref_src=twsrc%5Etfw">
-        April 29, 2020
-    </a>
-</blockquote>
-
-<blockquote class="twitter-tweet">
-    <p lang="en" dir="ltr">
-        Making your YA protagonist hate their period-appropriate clothing is both inaccurate and disrespectful to the millions of women who had badass lives and did badass things before twentieth century fashions.
-    </p>
-    &mdash; 📚Lydia📚 (@LibraryLydia) 
-    <a href="https://twitter.com/LibraryLydia/status/1255562386800607233?ref_src=twsrc%5Etfw">
-        April 29, 2020
-    </a>
-</blockquote>
-
-<blockquote class="twitter-tweet">
-    <p lang="en" dir="ltr">
-        Good evening. Another late one. My director was late to set. Sonnet 42. 
-        <a href="https://twitter.com/hashtag/ASonnetADay?src=hash&amp;ref_src=twsrc%5Etfw">
-            #ASonnetADay
-        </a> 
-        <a href="https://t.co/zZiIWnbTs3">
-            pic.twitter.com/zZiIWnbTs3
-        </a>
-    </p>
-    &mdash; Patrick Stewart (@SirPatStew) 
-    <a href="https://twitter.com/SirPatStew/status/1255688834421067777?ref_src=twsrc%5Etfw">
-        April 30, 2020
-    </a>
-</blockquote>
-
-<blockquote class="twitter-tweet">
-    <a href="https://twitter.com/E3Pon/status/1255706080476192770"></a>
-</blockquote>
+<div class="row">
+    <div class="col s8 offset-s2">
+        <blockquote class="twitter-tweet">
+            <a href="<%=url%>"></a>
+        </blockquote>
+        <form method="POST" action="/tweets/associate?_method=PUT">
+            <span>
+                <input type="radio" name="associate" value="positive">
+                <label>Positive</label>
+            </span>
+            <span>
+                <input type="radio" name="associate" value="neutral" checked>
+                <label>Neutral</label>
+            </span>
+            <span>
+                <input type="radio" name="associate" value="negative">
+                <label>Negative</label>
+            </span>
+            <div>
+                <input type="hidden" name="hashtag" value="<%=hashtag%>">
+            </div>
+            <input type="submit" class="btn" value="Submit">
+        </form>
+    </div>
+</div>
 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>

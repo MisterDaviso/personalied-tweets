@@ -42,11 +42,11 @@ router.post('/signup', (req,res,next) => {
             where: {email: req.body.email},
             defaults: req.body
         })
-        .then(([user, wasCreated]) => {
+        .then(async ([user, wasCreated]) => {
             // If a new user was created, follow the necessary procedures.
             if(wasCreated) {
                 // Create a partition for the user
-                sequelize.query(`CREATE TABLE user${user.id} PARTITION OF tweets FOR VALUES IN (${user.id})`)
+                await sequelize.query(`CREATE TABLE user${user.id} PARTITION OF tweets FOR VALUES IN (${user.id})`)
                 // AUTO-LOGIN with their password
                 passport.authenticate('local', {
                     successRedirect: '/profile/user',
