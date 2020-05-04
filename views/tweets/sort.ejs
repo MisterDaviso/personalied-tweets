@@ -1,5 +1,5 @@
 <div>
-    <h3> Sort tweets by #<%=hashtag%> </h3>
+    <h3> Sort tweets by #<%=tweet.hashtag%> </h3>
 </div>
 
 <div class="row">
@@ -24,15 +24,18 @@
                 </label>
             </span>
             <div>
-                <input type="hidden" name="hashtag" value="<%=hashtag%>">
+                <input type="hidden" name="hashtag" value="<%=tweet.hashtag%>">
+                <input type="hidden" name="tweetId" value="<%=tweet.tweet_id%>">
             </div>
-            <div><input type="submit" class="btn blue lighten-2" value="Submit" style="margin-top: 15px;"></div>
+            <div>
+                <input type="submit" class="btn blue lighten-2" value="Submit" style="margin-top: 15px;">
+            </div>
         </form>
     </div>
 </div>
 
 <blockquote class="twitter-tweet tw-align-center">
-    <a href="<%=url%>"></a>
+    <a href="<%=tweet.tweet_url%>"></a>
 </blockquote>
 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>

@@ -1,34 +1,39 @@
 // Required modules
 require('dotenv')
-const config = require('../config/config').production;
+const config = require('../config/config').development;
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize(config.database, '', '', config)
 var request = require('request')
+let async = require('async')
 
 // This is the object that will be exported
 let tweetMethods = {
-    addTweets: async (userId,hashtag) => {
+    addTweets: ([userId,hashtag]) => {
         // req.body contains userID and hashtag
         console.log("Starting access request")
-        await request({
+        request({
             url: 'https://api.twitter.com/oauth2/token',
             method: 'POST',
             auth: {user:process.env.API_KEY, pass:process.env.API_SECRET},
             form: {'grant_type':'client_credentials'}
-        }, async (err, response) => {
-            if(err) {console.log(err); return;}
+        }, (err, response) => {
+            if(err) {console.log("Error occured when gaining access"); return;}
             var token = JSON.parse(response.body).access_token
-            console.log("Starting tweet request")
-            await request({
-                url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${hashtag}&count=5`, 
+            console.log()
+            request({
+                url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${hashtag}&count=1`, 
                 headers: {'Authorization': 'Bearer ' + token}
-            }, async (err, response, body) => {
+            }, (err, response, body) => {
+                if(err) {console.log("Error occured when retrieving tweets");return;}
                 // Parse and store just the tweet data
                 let tweets = JSON.parse(body).statuses
-                console.log("Starting forEach loop")
-                await tweets.forEach(async (tweet) => {
+                tweets.forEach(async (tweet) => {
+                    console.log("Tweet:", tweet.id_str)
                     // Check if any tweets are stored at that location.
-                    let check = await sequelize.query(`SELECT * FROM user${userId} WHERE tweet_id = '${tweet.id}' AND hashtag = '${hashtag}'`)
+                    let query = `SELECT * FROM user${userId} WHERE tweet_id = '${tweet.id}' AND hashtag = '${hashtag}'`
+                    console.log("Checking 'check' request with query: " + query)
+                    let check = await sequelize.query(query)
+                    console.log("Check request complete.")
                     // If none are, enter the tweet into the table.
                     if(check[0].length === 0) {
                         // Write out all the values that are going to be inserted
@@ -43,21 +48,19 @@ let tweetMethods = {
                         sequelize.query(`INSERT INTO user${userId} VALUES (${values})`)
                     }
                 })
-                console.log("All the new tweets are added")
-                return "done"
             })
         })
     },
-    postTweets: async function(req,res,next) {
+    postTweets: function(req,res,next) {
         let token = this.getAccessKey()
         request({
             url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${req.body.hashtag}&count=50`, 
             headers: {'Authorization': 'Bearer ' + token}
-        }, async (err, response, body) => {
+        }, (err, response, body) => {
             // Parse and store just the tweet data
             let tweets = JSON.parse(body).statuses
             
-            await tweets.forEach(async (tweet) => {
+            async.forEach(tweets, async (tweet) => {
                 // Check if any tweets are stored at that location.
                 let check = await sequelize.query(`SELECT * FROM user${req.body.userId} WHERE tweet_id = ${tweet.id} AND hashtag =${req.body.hashtag}`)
                 // If none are, enter the tweet into the table.
@@ -73,8 +76,9 @@ let tweetMethods = {
                     // Insert the data via sequelize query    
                     await sequelize.query(`INSERT INTO user${req.body.userId} VALUES (${values})`)
                 }
+            }, () => {
+                next()
             })
-            next()
         })
     },
     getAccessKey: async function() {
@@ -120,19 +124,24 @@ let tweetMethods = {
         )
     },
     getUnsortedTweets: async ([userId, hashtag]) => {
-        let result = await sequelize.query(`SELECT * FROM user${userId} ` +
-            `WHERE hashtag = '${hashtag}' ` +
-            `AND association IS NULL`
-        )
-        console.log("The result of the query:",result[0])
-        return result[0]
+        try {
+            let result = await sequelize.query(`SELECT * FROM user${userId} ` +
+                `WHERE hashtag = '${hashtag}' ` +
+                `AND association IS NULL`
+            )
+            console.log("The result of the query:",result[0])
+            return result[0]
+        } catch (e) {
+            console.log("Error occured trying to get the tweets")
+            return []
+        }
     },
     hasUnsorted: async ([userId, hashtag]) => {
+        console.log("The Unsorted boolean thing is being called")
         let unassociated = await sequelize.query(`SELECT * FROM user${userId} ` +
             `WHERE hashtag = '${hashtag}' ` +
             `AND association IS NULL`
         )
-        console.log("Unassociated tweets:",unassociated[0])
         if (unassociated[0].length === 0) return false
         else return true
     },
@@ -144,6 +153,7 @@ let tweetMethods = {
         return hashtagData[0]
     },
     setAssociation: (userId,hashtag,association) => {
+        console.log(userId + ' ' + hashtag + ' ' + association)
         sequelize.query(`UPDATE user${userId} SET association = '${association}' WHERE user_id = ${userId} AND hashtag = '${hashtag}'`)
     }
 }
