@@ -8,7 +8,12 @@ let router = require('express').Router()
 let db = require('../models')
 const config = require('../config/config')[process.env.CONFIG_OBJECT];
 const Sequelize = require('sequelize')
-const sequelize = new Sequelize(config.database, '', '', config)
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
 var request = require('request')
 // Tweet and Sequelize functions
 var tweetMethods = require('../middleware/tweetMethods')
