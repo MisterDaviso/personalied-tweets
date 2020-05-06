@@ -1,6 +1,6 @@
 // Required modules
 require('dotenv')
-const config = require('../config/config').development;
+const config = require('../config/config')[process.env.CONFIG_OBJECT];;
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize(config.database, '', '', config)
 var request = require('request')
