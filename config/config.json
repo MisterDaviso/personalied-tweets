@@ -17,7 +17,7 @@
   "production": {
     "database": "d438f7e0ufq06k",
     "username": "gvmmblcbmrtspl",
-    "password": "gvmmblcbmrtspl",
+    "password": "a5f604fb50824184aa28834e1cc1aac8f1e70337319f7c50f500fdb066bcd2e8",
     "dialect": "postgres",
     "operatorsAliases": false,
     "use_env_variable": "DATABASE_URL"
