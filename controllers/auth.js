@@ -3,7 +3,7 @@ let router = require('express').Router()
 let db = require('../models')
 let passport = require('../config/passportConfig')
 // Sequelize
-const config = require('../config/config').development;
+const config = require('../config/config')[process.env.CONFIG_OBJECT];
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize(config.database, '', '', config)
 
