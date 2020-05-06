@@ -1,8 +1,13 @@
 // Required modules
 require('dotenv')
-const config = require('../config/config')[process.env.CONFIG_OBJECT];;
+const config = require('../config/config')[process.env.CONFIG_OBJECT];
 const Sequelize = require('sequelize')
-const sequelize = new Sequelize(config.database, '', '', config)
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
 var request = require('request')
 let async = require('async')
 
