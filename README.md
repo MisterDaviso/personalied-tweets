@@ -1,99 +1,58 @@
-# Project 2
+# Personalized Tweets!
 
-## Requirements
-- Have at least 2 models
-- Include Signup/Login functionality
-- Incorporate at least 1 api
-- Have complete RESTful routes (GET, POST, PUT, DELETE)
-- Utilize an ORM (sequelize)
-- Include a readme that explains how to use it
-- Semantically clean code
-- Be deployed online
+## Technologies Used
 
-## Ideas
-- 5e Spell Index
-    - Allow users to create new spells
-    - Add an upvote and comment system to each spell
-    - Add option to filter by search
-    - Add options to sort by level, class, school, etc.
-- Storywriting tools
-    - One section tracks actual written chapters
-    - One section tracks important characters and story arcs
-        - Add visualization tool for character arcs
-    - One section tracks setting, history, and locations
-**WINNER**
-- Machine Learning Data Collection via Twitter
-    - Filter through images of certain hashtags and save images that accurately represent that hashtag, with the intent of later filtering the data through a machine learning algorithm to have it recognize valid posts of that hashtag
+## Models Used
+**User Model**
+| Column | Type | Notes |
+| id | Integer |Serial Primary Key|
+| firstname | String | Length > 1 |
+| lastname | String | |
+| email | String | Valid Address |
+| username | String | |
+| password | String | Length >= 8 |
+| admin | Boolean | Default False |
+| birthday| Date | |
+| zipcode | Integer | |
+| bio | Text | |
+| picture | string | Valid URL |
+| createdAt | date | |
+| updatedAt | date | |
 
-## User Experience
-- User arrives on the home page
-    - Detailed explanation of app's purpose and how to use it
-    - Large links to Sign Up or Log In
-- New User is presented with a Sign Up page
-    - Enters a username, email, and must enter password twice to confirm new profile
-    - Create a unique db for the user
-        - Link and/or write a BASH file to run on profile creation
-        - Do it without restarting the server
-    - Store user log-in data and reference to their db in the general Users db
-- User Profile Page
-    - User clicks a button to start tracking data for a new Hashtag and provides input
-    - On creation, a new box is created on profile showing hashtag and entries stored
-        - Creates a box for each unique hashtag entry
-    - Clicking on a box brings user to sort screen
-- Sort Screen
-    - Tweet data is fetched and formatted to be readable for the user
-        - Parse some condition to check if the tweet's data is already stored
-    - User has three options: Positive, Neutral, and Negative association
-        - Pushing one stores the tweet's data with that association
-    - New tweet is presented and repeat
-- Navigation/Options
-    - Navigation is provided for "Login || Signup || Home Page"
-    - After logged in, navs replaced with "Welcome [USERNAME]! || Profile || Sign out || Home Page"
+**Tweet Data Model**
+| Column | Type | Notes |
+| user_id | integer | |
+| hashtag | string | |
+| association | string | |
+| tweet_id | string | Stored as String to preserve memory |
+| user_screen_name | string | |
+| tweet_url | string | |
 
-## Process
-* To do:
-    - Tweet Data processing
-        - Send requests for tweet data according to a hashtag until a new tweet appears
-            - If possible, send filters through the request and retrieve 5 unique at a time
-            - Do this request twice to have 10 tweets prepared to display, and retrieve another 5 whenever 5 tweets have been sorted
-        - Display tweet data for the user to see
-        - Add a form with tweet data and three types of submits that pass different data - Positive, Negative, and Neutral - and push the data to the User's database
-        - If possible, do not refresh page and instead transition to next tweet in the chain
-            - Otherwise, refresh page with new request for a unique tweet
-    - User Profile Creation
-        - Send information to users table: firstname, lastname, email, password, username, birthdate, etc.
-        - Run BASH script to create a model named after the user's uniqe ID in the user's table: hashtag, association, unique-tweet-id, [TWEET DATA], etc.
-    - User Profile Page
-        - Show user information
-        - Add options to edit user information
-        - Show a clickable box for each unique hashtag the user has collected data on: Hashtag, 
-            - Total tweets sorted written as a form to a GET route containing hidden data for the user's ID and the hashtag info
-            - Individual statistics for each association written as forms to the same GET route as the total, containing hidden data for userId and hashtag, but one more for association
-            - Button linked to GET route to display sort page 
-            - Button linked to DELETE route to remove hashtag data from database with security measure overlay to ensure this was not accidental
-        - Button that brings up an overlay to input a new hashtag to sort through
-            - Submitting this form refreshes the page to display the new box
-    - Sorted tweets
-        - Write a GET route that takes in userId, hashtag and association to get data from that user's model.
-            - If the association is NULL, treat it as requesting all three, or perhaps as removing that condition from the database request
-        - Rows of three by three displaying the tweets in a smaller size than
+## How to Use
 
-## Techniques
-- Creating a new model:
-    - Write a BASH file to copy a template model, rename it, and migrate it. The template will have the association to User already written.
+### 1. Signup/Login
+By far the easiest step in this process. It should be relatively self-explanatory. However, on the backend a partition of the tweet data table will be created associated with that specific user.
 
-## Technologies
-- Basics
-    - Express, EJS, EJS-layouts
-- BASH Scripts Reading/Writing
-    - Looks like Node has a built in "child_process" module. Should look into this more.
-    ```js
-    var exec = require('child_process').exec;
+### 2. Add a new hashtag to search for
+At the bottom of the user's page there is a button to add a new hashtag to start sorting tweets for. clicking this button brings up a modal to type in whatever hashtag you wish to sort and a button to submit. This will automatically populate the table with a few tweets. At the bottom of the user's page should now be a button that allows the user to begin sorting.
 
-    function puts(error, stdout, stderr) { sys.puts(stdout) }
-    exec("ls -la", function(error, stdout, stderr) {
-        if (!error) {}// things worked!
-        else {}// things failed :(
-    });
-    ```
+### 3. Sort through the tweets
+Clicking the "sort" button of a desired hashtag will redirect the user to a page and display a tweet as well as three radio buttons and a submit button to create an association with that tweet. Upoon submittal, the request is sent off to update that tweet's association attribute and the page is refreshed with a new tweet.
 
+## Known issues
+
+### User Experience
+1. After submitting the form to sort a new hashtag, they must then refresh their page to be able to see it at the bottom of their profile page, even though though the page seemingly refreshes upon submittal. This is a result of some bad code that I will go into later.
+2. The state of the hashtag boxes is currently the epitome of 'minimum'.
+3. The current system pulls tweets by a combination of most recent and most popular. However, as a result if the user sorts tweets too fast they may run out of everything that can be sorted at that time, so the user will be re-directed back to their profile page in this instance. Future updates would allow for a wider array of tweets to be collected and reduce the number of these cases.
+
+### State of the Code
+1. The nature of Oauth2 and Partitioned Tables complicated matters immensely. There are numerous async function calls throughout both the tweets.js controller and the tweetMethods.js middleware. This complexity overwhelmed me with the timetable I had upon creating this project and as aresult those two files became very messy with a lot of repeated code.
+
+### Untested Cases
+1. Multi-word hashtags have not been tested to be functional
+
+### Future Development
+1. Migrate all query and request functionality from tweets.js to tweetMethods.js without sacrificing functionality
+2. Clean up the hashtag cards on the user's profile page and add statistics to each
+3. Allow the user to see all tweets they have sorted and allow them to change their association if desired

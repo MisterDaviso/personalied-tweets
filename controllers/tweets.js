@@ -39,7 +39,7 @@ router.get('/sort/:hashtag', async (req,res) => {
             console.log("We got the token...")
             token = JSON.parse(response.body).access_token
             request({
-                url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${hashtag}&count=2`, 
+                url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${hashtag}&count=15`, 
                 headers: {'Authorization': 'Bearer ' + token}
             }, async (err, response, body) => {
                 if(err) {console.log("Error occured when retrieving tweets");return;}

@@ -21,7 +21,7 @@ let tweetMethods = {
             var token = JSON.parse(response.body).access_token
             console.log()
             request({
-                url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${hashtag}&count=1`, 
+                url: `https://api.twitter.com/1.1/search/tweets.json?q=%23${hashtag}&count=15`, 
                 headers: {'Authorization': 'Bearer ' + token}
             }, (err, response, body) => {
                 if(err) {console.log("Error occured when retrieving tweets");return;}
