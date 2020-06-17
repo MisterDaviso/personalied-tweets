@@ -1,4 +1,5 @@
 # Personalized Tweets!
+Select tweets of particular hashtags by their relevancy to you!
 
 ## Technologies Used
 
