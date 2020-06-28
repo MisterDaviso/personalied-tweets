@@ -6,6 +6,7 @@ Select tweets of particular hashtags by their relevancy to you!
 ## Models Used
 **User Model**
 | Column | Type | Notes |
+|--------|------|-----------------|
 | id | Integer |Serial Primary Key|
 | firstname | String | Length > 1 |
 | lastname | String | |
@@ -22,6 +23,7 @@ Select tweets of particular hashtags by their relevancy to you!
 
 **Tweet Data Model**
 | Column | Type | Notes |
+|--------|------|-----------------|
 | user_id | integer | |
 | hashtag | string | |
 | association | string | |
