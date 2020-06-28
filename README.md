@@ -2,6 +2,9 @@
 Select tweets of particular hashtags by their relevancy to you!
 
 ## Technologies Used
+* SQL Partitioned Tables
+* OAuth2 Authentication
+* Twitter Developer Tools
 
 ## Models Used
 **User Model**
